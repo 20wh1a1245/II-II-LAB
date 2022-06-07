@@ -1,32 +1,32 @@
-#include <stdio.h>
-int main()
-{
-	// in fcfs, arrival time is given
-	// implemented using FIFO
-	//fcfs is a non pre emptive scheduling algo
-	// fcfs suffers from convoy effect
-	int n;
-	scanf("%d", &n);
-	int burst_time[n];
-	for(int i = 0; i < n; i++)
-		scanf("%d", &burst_time[i]);
-	int wt = 0;
-	float wt_sum = 0;
-	int tat = burst_time[0];
-	float tat_sum = burst_time[0];
-	printf("Processes\tBurst time\tWaiting time\tTurn around time\n");
-	printf("%d\t\t%d\t\t%d\t\t%d\n", 1, burst_time[0], wt, tat);
-	for(int i = 1; i < n; i++)
-	{
-		printf("%d\t\t%d\t\t", i+1, burst_time[i]);
-		wt = wt + burst_time[i-1];
-		printf("%d\t\t", wt);
-		wt_sum = wt_sum + wt;
-		tat = tat + burst_time[i];
-		printf("%d\n", tat);
-		tat_sum = tat_sum + tat;
+#include<stdio.h>
+void waiting_time(int process[],int n,int wt[],int bt[]){
+	wt[0]=0;
+	for(int i=1;i<n;i++){
+		wt[i] = wt[i-1]+bt[i-1];
 	}
-	printf("wt avg: %f\n", wt_sum/n);
-	printf("tat sum: %f\n", tat_sum/n);	
+}
+void turn_around_time(int process[],int n,int bt[],int wt[],int tat[]){
+	for(int i=0;i<n;i++){
+		tat[i]=wt[i]+bt[i];
+	}
+}
+int main(){
+	int process[]={1,2,3};
+	int n = sizeof process/sizeof process[0];
+	int bt[]={10,5,8};
+	int wt[n],tat[n],i;
+	int total_wt=0,total_tat=0;
+	float avg_wt = 0,avg_tat=0;
+
+	waiting_time(process,n,wt,bt);
+	turn_around_time(process,n,bt,wt,tat);
+	for(i=0;i<n;i++){
+		total_wt += wt[i];
+		total_tat += tat[i];
+	}
+	avg_tat = (float) total_tat/(float) n;
+	avg_wt = (float) total_wt/(float) n;
+	printf("Average waiting time = %f\n",avg_wt);
+	printf("Average turn around time = %f\n",avg_tat);
 	return 0;
 }
